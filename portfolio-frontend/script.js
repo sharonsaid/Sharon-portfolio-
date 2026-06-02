@@ -1,4 +1,8 @@
 const API_URL = window.API_URL || "http://localhost:5000/api/profile";
+const API_BASE = API_URL.replace(/\/api\/.*$/, "");
+const PROFILE_API = `${API_BASE}/api/profile`;
+const SKILLS_API = `${API_BASE}/api/skills`;
+const EDUCATION_API = `${API_BASE}/api/education`;
 
 const PROFILE = {
     name: "Sharon Saidi Sogoi",
@@ -8,6 +12,34 @@ const PROFILE = {
 function applyProfile(name, role) {
     document.getElementById("api-name").textContent = name;
     document.getElementById("api-role").textContent = role;
+}
+
+function renderSkills(skills) {
+    const container = document.getElementById("skill-list");
+    if (!container) return;
+    container.innerHTML = "";
+    skills.forEach((skill) => {
+        const item = document.createElement("li");
+        item.className = "skill-tag";
+        item.textContent = skill;
+        container.appendChild(item);
+    });
+}
+
+function renderEducation(entries) {
+    const container = document.getElementById("education-timeline");
+    if (!container) return;
+    container.innerHTML = "";
+    entries.forEach((entry) => {
+        const item = document.createElement("div");
+        item.className = "timeline__item";
+        item.innerHTML = `
+            <span class="timeline__year">${entry.year}</span>
+            <p class="timeline__title">${entry.title}</p>
+            <p class="card__text">${entry.description}</p>
+        `;
+        container.appendChild(item);
+    });
 }
 
 function isPlaceholderName(name) {
@@ -22,12 +54,28 @@ async function getBackendData() {
     applyProfile(PROFILE.name, PROFILE.role);
 
     try {
-        const response = await fetch(API_URL);
-        const data = await response.json();
+        const [profileResponse, skillsResponse, educationResponse] = await Promise.all([
+            fetch(PROFILE_API),
+            fetch(SKILLS_API),
+            fetch(EDUCATION_API)
+        ]);
 
-        const name = isPlaceholderName(data.name) ? PROFILE.name : data.name;
-        const role = isPlaceholderRole(data.role) ? PROFILE.role : (data.role || PROFILE.role);
+        const [profileData, skillsData, educationData] = await Promise.all([
+            profileResponse.json(),
+            skillsResponse.json(),
+            educationResponse.json()
+        ]);
+
+        const name = isPlaceholderName(profileData.name) ? PROFILE.name : profileData.name;
+        const role = isPlaceholderRole(profileData.role) ? PROFILE.role : (profileData.role || PROFILE.role);
         applyProfile(name, role);
+
+        if (Array.isArray(skillsData) && skillsData.length) {
+            renderSkills(skillsData);
+        }
+        if (Array.isArray(educationData) && educationData.length) {
+            renderEducation(educationData);
+        }
     } catch (error) {
         console.error("API error:", error);
         applyProfile(PROFILE.name, PROFILE.role);

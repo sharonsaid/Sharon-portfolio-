@@ -167,7 +167,9 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
+    justify-content: flex-end;
 }
+
 
 .nav__link {
     color: var(--accent);

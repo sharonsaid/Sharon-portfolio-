@@ -1,13 +1,9 @@
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
 const app = express();
 
 app.use(cors());
-
-// Serve frontend static files
-const frontendPath = path.join(__dirname, '..', 'portfolio-frontend');
-app.use(express.static(frontendPath));
+app.use(express.json());
 
 app.get('/api/profile', (req, res) => {
     res.json({
@@ -21,19 +17,3 @@ app.listen(PORT, () => {
     console.log(`Server running smoothly on port ${PORT}`);
 });
 
-// Fallback: serve index.html for any other route (for client-side routing)
-const fs = require('fs');
-// Use a fallback middleware (no path) to avoid path-to-regexp issues with '*'
-app.use((req, res) => {
-    const indexFile = path.join(frontendPath, 'index.html');
-    console.log('Frontend path:', frontendPath);
-    console.log('Index exists:', fs.existsSync(indexFile));
-    res.sendFile('index.html', { root: frontendPath }, (err) => {
-        if (err) {
-            console.error('Error sending index.html:', err);
-            if (!res.headersSent) {
-                res.status(500).send('Server error');
-            }
-        }
-    });
-});

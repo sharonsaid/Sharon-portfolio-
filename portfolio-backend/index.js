@@ -22,6 +22,17 @@ app.listen(PORT, () => {
 });
 
 // Fallback: serve index.html for any other route (for client-side routing)
+const fs = require('fs');
 app.get('*', (req, res) => {
-    res.sendFile(path.join(frontendPath, 'index.html'));
+    const indexFile = path.join(frontendPath, 'index.html');
+    console.log('Frontend path:', frontendPath);
+    console.log('Index exists:', fs.existsSync(indexFile));
+    res.sendFile('index.html', { root: frontendPath }, (err) => {
+        if (err) {
+            console.error('Error sending index.html:', err);
+            if (!res.headersSent) {
+                res.status(500).send('Server error');
+            }
+        }
+    });
 });

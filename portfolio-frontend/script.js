@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000/api/profile";
+const API_URL = window.API_URL || "http://localhost:5000/api/profile";
 
 const PROFILE = {
     name: "Sharon Saidi Sogoi",

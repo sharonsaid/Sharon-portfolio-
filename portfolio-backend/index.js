@@ -23,7 +23,8 @@ app.listen(PORT, () => {
 
 // Fallback: serve index.html for any other route (for client-side routing)
 const fs = require('fs');
-app.get('*', (req, res) => {
+// Use a fallback middleware (no path) to avoid path-to-regexp issues with '*'
+app.use((req, res) => {
     const indexFile = path.join(frontendPath, 'index.html');
     console.log('Frontend path:', frontendPath);
     console.log('Index exists:', fs.existsSync(indexFile));

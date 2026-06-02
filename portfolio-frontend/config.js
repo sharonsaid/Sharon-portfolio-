@@ -1,4 +1,4 @@
 // Frontend API configuration.
-// Replace this value with your Render backend URL when deploying frontend to Vercel.
-// Example: window.API_URL = "https://your-backend.onrender.com/api/profile";
-window.API_URL = "http://localhost:5000/api/profile";
+// This points the frontend (deployed on Vercel) to the Render backend API.
+// Update only if your Render domain changes.
+window.API_URL = "https://sharon-portfolio-ud66.onrender.com/api/profile";

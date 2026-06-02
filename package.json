@@ -1,0 +1,10 @@
+{
+  "name": "cloud-portfolio-project",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start:backend": "npm start --prefix portfolio-backend",
+    "start:frontend": "npx --yes serve portfolio-frontend -l 3000",
+    "start": "echo Run backend and frontend in two terminals: npm run start:backend  AND  npm run start:frontend"
+  }
+}
